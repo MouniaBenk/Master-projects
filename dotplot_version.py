@@ -7,30 +7,6 @@ import os
 import gzip
 import shutil
 
-'''
-def telecharg_fichiers(GCA):
-                   
-            ftp='ftp://ftp.ncbi.nlm.nih.gov/genomes/all/'     
-            ftp_txt=ftp+'/GCA'+extension[-1]+'_feature_table.txt.gz'
-            ftp_faa=line[20]+'/GCA'+extension[-1]+'_protein.faa.gz'
-                   
-
-
-            p1=os.system(f"wget -nc --no-check-certificate {ftp_txt}")
-            p2=os.system(f"wget -nc --no-check-certificate {ftp_faa}")
-                
-   
-            with gzip.open('GCA'+extension[-1]+'_feature_table.txt.gz', 'rb') as f_in:
-                with open('GCA'+extension[-1]+'_feature_table.txt', 'wb') as f_out:
-                    shutil.copyfileobj(f_in, f_out)
-            with gzip.open('GCA'+extension[-1]+'_protein.faa.gz', 'rb') as f_in:
-                with open('GCA'+extension[-1]+'_protein.faa', 'wb') as f_out:
-                    shutil.copyfileobj(f_in, f_out)
-                                    
-                                    
-telecharg_fichiers('GCA_000009985.1')
-telecharg_fichiers('GCA_000014865.1')
-'''
                                     
 def liste_cds(nom_fich):
         li=[]
@@ -90,6 +66,7 @@ class fenetres():
         f=open(self.blast_file,'r')
         #mettre les accesions des cds homologues+evalue(du match) du fichier blast dans 
         #un dictionnaire de paires de gènes et leur e_value d'homologie
+        
         #seuil=float(self.seuil)
         dic={}
         for line in f:
@@ -140,7 +117,7 @@ class fenetres():
                 
    
         for pair in dic.keys():
-            print('yes')
+         
             if pair[0] in acc1 and pair[1] in acc2:
                 if dic[pair]>self.seuil:   #filtre: on ne prends que les matchs avec % d'id supérieure au seuil
                     self.mat[acc1.index(pair[0])][acc2.index(pair[1])]=1                      
@@ -186,10 +163,9 @@ class fenetres():
         if self.test=="couverture":
             self.mat_dotplot_selon_couverture()
            
-        #print(self.mat)    
+    
         print(self.seuil)
-        #c_l = tk.Label(self.f2, text="ACCEUILL")
-        #c_l.pack()
+      
         ind=np.argwhere(self.mat==1)
         x=[]
         y=[]
@@ -225,14 +201,7 @@ class Premiere_Fenetre:
         self.cds1= cds1
         self.cds2=cds2
         # Crée la fenêtre
-        '''
-        self.f = tk.Tk()
-        self.f.title("Voulez vous faire dotplot pour PAIRE DE GENOMES?")
-        self.f.geometry("200x100")
-        bouton=tk.Button(self.f,text="OK", command=self.choix_test)
-        bouton.pack()
-        self.f.mainloop()
-        '''
+        
         self.choix_test()
     def fonction_e_value(self):   
          
@@ -263,11 +232,7 @@ class Premiere_Fenetre:
         boutH.pack()
         boutB.pack()
         self.fenetre_test.mainloop()
-        '''
-    def recuper_genom(self) :
-        self.f.destroy()
-        self.choix_test() 
-        '''
+    
 
  
  
