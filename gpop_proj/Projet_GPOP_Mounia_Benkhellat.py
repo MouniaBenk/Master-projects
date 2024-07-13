@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+######################################################################################
+## This project is undertaken was conducted as part of a Population genetics course ##
+######################################################################################
 
 import numpy as np
 import operator as op
@@ -142,4 +145,72 @@ for nb in n:
     time=int((2*N)/(nb*(nb-1)))
     print(time)
 
+
+## 3/ MUTATION
+
+gen_nb=400
+sim_nb=10
+N=100
+
+
+def mutation(N,mu):
+   
+        pop = np.zeros((N,gen_nb),dtype=int)
+
+        proba_array = [1/N]*N
+        freq_=[1]    #frequence of allele 1 
+        fix=[1]
+        nv_allele=1
+        for t in range(1,gen_nb):
+            pop[:,t] = np.random.choice(pop[:,t-1], size=N, replace=True, p=proba_array)  
+
+            for i in range(N):
+                a=np.random.binomial(1, mu)
+                if a ==1:   #if a mutation appeared
+                    pop[i][t]=nv_allele
+                    nv_allele+=1          
+            
+            freq_.append((pop[:,t]==0).sum()/N) 
+            
+            prob = 0 
+            for k in range (gen_nb): #itérations
+                sample = rd.sample(sorted(pop[:,t]),2)  #on tire 2 alleles randomly
+                
+                if len(Counter(sample).keys())==1:  #if the two alleles are identical
+                    prob+=1
+               
+            prob = prob/gen_nb
+            fix.append(prob)
+
+            #fix_expec.append (fixation_id(fix_expec[-1],pop,mu) )
+        
+        return pop , freq_, fix
+
+    
+
+freq_=[]  
+
+mu=[1e-8, 2e-4,1e-2, 0.2]
+
+for m in mu:
+    pop, f, fix=mutation(N, m) 
+    #print(pop)
+    freq_.append(f)
+    fix_exp=np.ones(gen_nb)
+    for t in range(1,gen_nb):
+        fix_exp[t]=(1/N)*(1-m)**2+(1-(1/N))*(1-m)**2*fix_exp[t-1]   #expected fixation index
+    
+    fig, ax = plt.subplots(1, figsize=(7, 5))
+    
+    ax.plot(np.arange(gen_nb),fix, label="Simulated")
+    ax.plot(np.arange(gen_nb),fix_exp, label="Expected")
+    plt.legend()#loc='center left', bbox_to_anchor=(1, 0.5),fontsize = 13)
+    title = 'Mutations in the infinite-allele model µ='+str(m)+', N='+str(N)
+    plt.title(title,fontsize = 15)
+    plt.ylabel('fixation index',fontsize = 13)
+    plt.xlabel('generations',fontsize = 13)
+
+    plt.ylim([-0.1, 1.2])
+    plt.xlim([0, gen_nb])
+    plt.show()
 
